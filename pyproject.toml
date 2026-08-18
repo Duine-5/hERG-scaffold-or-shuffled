@@ -7,7 +7,10 @@ authors = [
     { name = "sylphir", email = "mevda0503@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "chembl-webresource-client>=0.10.9",
+    "pandas>=3.0.5",
+]
 
 [project.scripts]
 chembl-split-check = "chembl_split_check:main"
