@@ -1,3 +1,4 @@
+# Extracts data for every entry of CHEMBL240 from the ChEMBL database and saves it to a CSV file
 from pathlib import Path
 
 import pandas as pd

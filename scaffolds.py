@@ -1,10 +1,17 @@
+from pathlib import Path
+
 import pandas as pd
+from matplotlib import pyplot as plt
 from rdkit import Chem
 from rdkit.Chem import Draw
 from rdkit.Chem.Scaffolds import MurckoScaffold
 
 df = pd.read_csv("data/CHEMBL240_activities.csv")
-smi = df["canonical_smiles"].iloc[0]
+d = df[df["standard_type"] == "IC50"]
+d = d[d["standard_relation"] == "="]
+d = d[d["standard_units"] == "nM"]
+
+smi = d["canonical_smiles"].iloc[0]
 
 # -----------------------------------------------
 # Initial test
@@ -17,7 +24,7 @@ Draw.MolToFile(mol, "data/mol.png", size=(400, 400))
 
 # -----------------------------------------------
 # Actual function
-uniq = df.drop_duplicates("canonical_smiles")
+uniq = d.drop_duplicates("canonical_smiles")
 uniq = uniq.copy()
 
 
@@ -33,8 +40,30 @@ def scaffold(smi):
 uniq["scaffold"] = uniq["canonical_smiles"].apply(scaffold)
 
 print(uniq["scaffold"].isna().sum(), "failed to parse")
+print(len(uniq), "distinct molecules")
 print(uniq["scaffold"].nunique(), "distinct scaffolds")
 print("----------------")
 print(
-    uniq["scaffold"].value_counts().head(10).rename_axis("Top 10 Structures").toString()
+    uniq["scaffold"]
+    .value_counts()
+    .head(10)
+    .rename_axis("Top 10 Structures")
+    .to_string()
 )
+print("----------------")
+
+counts = uniq["scaffold"].value_counts()
+print((counts == 1).sum(), "compounds with unique scaffolds")
+print(
+    round(counts[counts == 1].sum() / len(uniq) * (100), 2),
+    "% of compounds have unique scaffolds",
+)
+
+Path("figures").mkdir(exist_ok=True)
+
+counts.value_counts().sort_index().plot(
+    kind="bar", logy=True
+)  # vertical axis  on a log scale (logy)
+plt.xlabel("Compounds per Scaffold")
+plt.ylabel("log(Number of Scaffolds)")
+plt.savefig("figures/scaffold_sizes.png", dpi=150, bbox_inches="tight")
