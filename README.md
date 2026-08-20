@@ -10,3 +10,7 @@ Will a random test split inflate apparent model performance relative to a scaffo
 
 ## Findings
 From 8,393 compounds, 4,266 scaffolds were found; 3059 compounds had a unique scaffold (36.45% of the total compounds), meaning that 1,207 scaffolds were repeated more than once across all compounds.
+
+# Methods
+## P Value
+Concentrations above -3 (log) were discarded as it is the normal screening cutoff for inactive compounds. 

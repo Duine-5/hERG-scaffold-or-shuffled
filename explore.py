@@ -40,7 +40,8 @@ Mol_comparison_tbl = pd.concat(
 print(Mol_comparison_tbl)
 
 print("----------------------")
-pchembl = 9 - np.log10(d.standard_value)
-conc_comparison_tbl = pd.DataFrame(
+d["p_values"] = 9 - np.log10(d.standard_value)  # Converts nm to -log(M)
+pchembl = d[d["parent_molecule_chembl_id"].notna()]  # no missing ids
 
-print(pchembl)
+print("p-value summary")
+print(pchembl["p_values"].describe())
