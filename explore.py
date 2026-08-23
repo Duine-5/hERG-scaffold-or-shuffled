@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 df = pd.read_csv("data/CHEMBL240_activities.csv")
+df_conf = pd.read_csv("data/CHEMBL240_confidence.csv")
 
 print(df.shape)
 print(
@@ -74,19 +75,37 @@ print(pchembl_iterations["std"].median(), "median std of pchembl values")
 print((pchembl_iterations["std"] == 0).sum(), "zeroes found in std of p-values' median")
 print("-------------------------")
 
+# print(
+#     pchembl[
+#         pchembl["parent_molecule_chembl_id"].isin(
+#             pchembl_iterations[pchembl_iterations["std"] == 0].index
+#         )
+#     ][
+#         [
+#             "parent_molecule_chembl_id",
+#             "assay_chembl_id",
+#             "document_chembl_id",
+#             "document_year",
+#             "standard_value",
+#             "potential_duplicate",
+#         ]
+#     ].sort_values(["parent_molecule_chembl_id", "document_chembl_id"])
+# )
+
+print("-------------------------")
+# Confidence Score Analysis and Matching
+print("Overall confidence score listing")
+conf_groups = df_conf.groupby("confidence_score")["confidence_score"].count()
+
+print(conf_groups.to_string(header=False))
+
+print("---")
+print("Confidence score matched to filtered data IDs")
+conf_groups = df_conf[df_conf["assay_chembl_id"].isin(pchembl["assay_chembl_id"])]
+# print(df["assay_chembl_id"].nunique())
 print(
-    pchembl[
-        pchembl["parent_molecule_chembl_id"].isin(
-            pchembl_iterations[pchembl_iterations["std"] == 0].index
-        )
-    ][
-        [
-            "parent_molecule_chembl_id",
-            "assay_chembl_id",
-            "document_chembl_id",
-            "document_year",
-            "standard_value",
-            "potential_duplicate",
-        ]
-    ].sort_values(["parent_molecule_chembl_id", "document_chembl_id"])
+    conf_groups.groupby("confidence_score")["confidence_score"]
+    .count()
+    .to_string(header=False)
 )
+# print(conf_groups)
