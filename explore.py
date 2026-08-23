@@ -41,7 +41,52 @@ print(Mol_comparison_tbl)
 
 print("----------------------")
 d["p_values"] = 9 - np.log10(d.standard_value)  # Converts nm to -log(M)
-pchembl = d[d["parent_molecule_chembl_id"].notna()]  # no missing ids
+pchembl = d[
+    (d["parent_molecule_chembl_id"].notna())
+    & (d["p_values"] > 3)
+    & (d["potential_duplicate"] == 0)
+]  # no missing ids
+
 
 print("p-value summary")
-print(pchembl["p_values"].describe())
+print(
+    pchembl.groupby("parent_molecule_chembl_id")["p_values"].agg(
+        ["median", "std", "count"]
+    )
+)
+
+pchembl = pchembl.drop_duplicates(
+    subset=[
+        "parent_molecule_chembl_id",
+        "assay_chembl_id",
+        "document_chembl_id",
+        "standard_value",
+    ]
+)
+
+pchembl_iterations = pchembl.groupby("parent_molecule_chembl_id")["p_values"].agg(
+    ["median", "std", "count"]
+)
+pchembl_iterations = pchembl_iterations[pchembl_iterations["std"].notna()]
+print(pchembl["p_values"].std(), "standard deviation of p-values")
+print(pchembl_iterations)
+print(pchembl_iterations["std"].median(), "median std of pchembl values")
+print((pchembl_iterations["std"] == 0).sum(), "zeroes found in std of p-values' median")
+print("-------------------------")
+
+print(
+    pchembl[
+        pchembl["parent_molecule_chembl_id"].isin(
+            pchembl_iterations[pchembl_iterations["std"] == 0].index
+        )
+    ][
+        [
+            "parent_molecule_chembl_id",
+            "assay_chembl_id",
+            "document_chembl_id",
+            "document_year",
+            "standard_value",
+            "potential_duplicate",
+        ]
+    ].sort_values(["parent_molecule_chembl_id", "document_chembl_id"])
+)

@@ -13,4 +13,12 @@ From 8,393 compounds, 4,266 scaffolds were found; 3059 compounds had a unique sc
 
 # Methods
 ## P Value
-Concentrations above -3 (log) were discarded as it is the normal screening cutoff for inactive compounds. 
+Concentrations above -3 (log) were discarded as it is the normal screening cutoff for inactive compounds. Results changed minimally (representing the removal of outlier testing):
+- median 5.3 -> 5.301
+- mean + 0.02
+- std 1.008 -> 0.976
+
+### Duplicate removal
+Standard deviation across the same parent molecule was analysed, multiple duplicates skewed standard deviation towards 0. Duplicates were filtered through filtering out Potential Duplicates marked by Chembl and by filtering out data which contained same Parent Molecule ID, Assay ID, Document ID, and Standard Value.
+> Note: Utilising the 4 filtering parameters allows some probable duplicate data in the system, but reduces the probability that genuine data is lost. There are still 40 entries (out of 8,304) which contain the exact same Standard Value, though they are not necessarily duplicates.
+Standard deviation was found to be 0.265
