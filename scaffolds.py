@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import function
 import pandas as pd
 from matplotlib import pyplot as plt
 from rdkit import Chem
@@ -7,9 +8,8 @@ from rdkit.Chem import Draw
 from rdkit.Chem.Scaffolds import MurckoScaffold
 
 df = pd.read_csv("data/CHEMBL240_activities.csv")
-d = df[df["standard_type"] == "IC50"]
-d = d[d["standard_relation"] == "="]
-d = d[d["standard_units"] == "nM"]
+df_conf = pd.read_csv("data/CHEMBL240_confidence.csv")
+d = function.filtered_list(df, df_conf)
 
 smi = d["canonical_smiles"].iloc[0]
 
