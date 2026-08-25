@@ -1,6 +1,7 @@
 # Extracts data for every entry of CHEMBL240 from the ChEMBL database and saves it to a CSV file
 from pathlib import Path
 
+import function
 import pandas as pd
 from chembl_webresource_client.new_client import new_client
 
@@ -44,3 +45,16 @@ if Path("data/CHEMBL240_confidence.csv").exists() == False:
     df_c.to_csv("data/CHEMBL240_confidence.csv", index=False)
 else:
     print("Confidence skipped")
+
+df_activities = pd.read_csv("data/CHEMBL240_activities.csv")
+df_confidence = pd.read_csv("data/CHEMBL240_confidence.csv")
+d = function.filtered_list(df_activities, df_confidence)
+d = d["parent_molecule_chembl_id"].tolist()
+
+InChIKeys = new_client.molecule.filter(molecule_chembl_id__in=d)
+if Path("data/CHEMBL240_InChIKeys.csv").exists():
+    print("InChIKeys skipped")
+else:
+    df = pd.DataFrame(InChIKeys)
+    df.to_csv("data/CHEMBL240_InChIKeys.csv", index=False)
+    print(len(InChIKeys), "InChIKeys")

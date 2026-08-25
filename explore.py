@@ -164,3 +164,23 @@ print("-------------------------")
 # print(d["parent_molecule_chembl_id"].sample().item())
 print(d.shape)
 print(d["parent_molecule_chembl_id"].nunique())
+
+# ----------------------------------------------------------------------------------------------------
+# Collapssed list
+#
+# ----------------------------------------------------------------------------------------------------
+# collapsed_lst = d.groupby("parent_molecule_chembl_id")["p_values"].agg(
+#     ["median", "std", "count"]
+# )
+collapsed_lst = d.groupby("parent_molecule_chembl_id")["canonical_smiles"].nunique()
+print("-------------------------")
+print(collapsed_lst.agg(["max", "min", "mean"]))
+print((collapsed_lst > 1).sum())
+print((collapsed_lst == 0).sum())
+print((collapsed_lst >= 1).sum())
+print("..........")
+print(
+    d[d["parent_molecule_chembl_id"].isin(collapsed_lst[collapsed_lst > 1].index)][
+        ["parent_molecule_chembl_id", "canonical_smiles", "molecule_chembl_id"]
+    ].to_string()
+)
