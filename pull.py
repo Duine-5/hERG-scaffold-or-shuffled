@@ -51,10 +51,19 @@ df_confidence = pd.read_csv("data/CHEMBL240_confidence.csv")
 d = function.filtered_list(df_activities, df_confidence)
 d = d["parent_molecule_chembl_id"].tolist()
 
-InChIKeys = new_client.molecule.filter(molecule_chembl_id__in=d)
+InChIKeys = new_client.molecule.filter(molecule_chembl_id__in=d).only(
+    "molecule_chembl_id",
+    "molecule_structures",
+    "canonical_smiles",
+    "standard_inchi_key",
+)
 if Path("data/CHEMBL240_InChIKeys.csv").exists():
     print("InChIKeys skipped")
 else:
-    df = pd.DataFrame(InChIKeys)
-    df.to_csv("data/CHEMBL240_InChIKeys.csv", index=False)
+    df = pd.DataFrame(InChIKeys)[["molecule_chembl_id", "molecule_structures"]].dropna()
+    df["SMILES"] = df["molecule_structures"].map(lambda x: x["canonical_smiles"])
+    df["InChIKey"] = df["molecule_structures"].map(lambda x: x["standard_inchi_key"])
+
+    df.to_csv("data/CHEMBL240_inchikey.csv", index=False)
     print(len(InChIKeys), "InChIKeys")
+print(df.shape)
