@@ -12,7 +12,6 @@ df_conf = pd.read_csv("data/CHEMBL240_confidence.csv")
 d = function.filtered_list(df, df_conf)
 
 smi = d["canonical_smiles"].iloc[0]
-
 # -----------------------------------------------
 # Initial test
 # print(smi)
@@ -24,8 +23,7 @@ Draw.MolToFile(mol, "data/mol.png", size=(400, 400))
 
 # -----------------------------------------------
 # Actual function
-uniq = d.drop_duplicates("canonical_smiles")
-uniq = uniq.copy()
+d = d.drop_duplicates(subset=["parent_molecule_chembl_id"])
 
 
 def scaffold(smi):
@@ -37,25 +35,27 @@ def scaffold(smi):
     return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(mol))
 
 
-uniq["scaffold"] = uniq["canonical_smiles"].apply(scaffold)
+d["scaffold"] = d["canonical_smiles"].apply(scaffold)
 
-print(uniq["scaffold"].isna().sum(), "failed to parse")
-print(len(uniq), "distinct molecules")
-print(uniq["scaffold"].nunique(), "distinct scaffolds")
+# print(
+#     d[d["scaffold"].isna()][
+#         ["assay_chembl_id", "scaffold", "parent_molecule_chembl_id"]
+#     ]
+# )
+
+print(d["scaffold"].isna().sum(), "failed to parse")
+print(len(d), "distinct molecules")
+print(d["scaffold"].nunique(), "distinct scaffolds")
 print("----------------")
 print(
-    uniq["scaffold"]
-    .value_counts()
-    .head(10)
-    .rename_axis("Top 10 Structures")
-    .to_string()
+    d["scaffold"].value_counts().head(10).rename_axis("Top 10 Structures").to_string()
 )
 print("----------------")
 
-counts = uniq["scaffold"].value_counts()
+counts = d["scaffold"].value_counts()
 print((counts == 1).sum(), "compounds with unique scaffolds")
 print(
-    round(counts[counts == 1].sum() / len(uniq) * (100), 2),
+    round(counts[counts == 1].sum() / len(d[d["scaffold"].notnull()]) * (100), 2),
     "% of compounds have unique scaffolds",
 )
 

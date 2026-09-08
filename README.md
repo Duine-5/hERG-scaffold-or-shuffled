@@ -1,9 +1,10 @@
 # Experimental design
 ## Hypothesis
 Random training data sets inflates linear regression model performance for pChembl relative to a scaffold-based split data set. 
+> Note: drafted during commit f168b82 2026-08-27, edits made after incur corrections
 ## Tested Descriptors
 Target will be CHEMBL240, with data extracted from CHEMBL 37
-5 descritpros will be 
+5 descriptors will be:
 - MW ([Molecular Weight] Greater contact surface typically allows for greater potency)
 - CLogP ([Calculated logP] Binding tends to work through hydrophobic interactions)
 - TPSA ([Topological Polar Surface Area] A greater TPSA is an indicator of solubility and hydrophylic interactions, which may work against binding)
@@ -14,7 +15,7 @@ Target will be CHEMBL240, with data extracted from CHEMBL 37
 ## Scaffold Framework
 The core molecular backbone will be determined via Bemis-Murcko framework (Murcko Scaffold).
 ## Test set and Repeats
-> Data will utilise random seeds for both distribution and repetas
+> Data will utilise random seeds for both distribution and repeats
 The data will be split into 80% training data, 20% testing data. 
 50 repeats will be performed 
 ## Success metrics
@@ -22,19 +23,21 @@ Gaps below the noise floor of 0.256 log units will be noted as uninterpretable. 
 To accurately assess the model's performance, MAE was chosen as the success evaluation metric. 
 ## Statistical analysis
 An alpha of 0.05, corresponding to a 95% will be utilised as the width of the paired interval.
-A MAE paired interval between the random and scaffold split will determine the mode's accuracy.
+A MAE paired interval between the random and scaffold split will determine the model's accuracy.
 
 # Filter
 - 32,640 bioactivity entries
 - 16,198 entries which utilised IC50
 - 10,228 entries which found IC50 within the tested concentrations
 - 10,219 entries which report values in nM
-- 8,394 -> 8,258 unique compounds (Note: 1 compound could not be parsed, change ocurred after data validity comments filter). 
+- 8,394 -> 8,258 unique compounds 
 - 8,202 unique parents
 - 8,200 molecule structures (CHEMBL5869391 and CHEMBL5784130 had no structure)
 
 ## Scaffolds
-From 8,232 compounds, 4,188 scaffolds were found; 3001 compounds had a unique scaffold (36.46% of the total compounds), meaning that 1,187 scaffolds were repeated more than once across all compounds.
+From 8,202 compounds, 4,187 scaffolds were found; 3014 compounds had a unique scaffold (36.76% of the total compounds), meaning that 1,173 scaffolds were repeated more than once across all compounds.
+
+Compounds with no scaffold were dropped from the analysis as they cannot be parsed and do not represent a significant sample.
 
 # Methods
 ## P Value
