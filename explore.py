@@ -29,21 +29,6 @@ print(
 # ----------------------------------------------------------------------------------------------------
 # Filters
 # ----------------------------------------------------------------------------------------------------
-# print("----------------------")
-# # Differentiate parent molecule from salt-forms
-# d = df[df["standard_type"] == "IC50"]
-# print("IC50 only", len(d))
-
-# d = d[d["standard_relation"] == "="]
-# print("exact only", len(d))
-
-# d = d[d["standard_units"] == "nM"]
-# print("nM only", len(d))
-
-# d = d[
-#     d["data_validity_comment"].isna()
-# ]  # Filter based on analysis for data_validity comments, discarding all commented data
-
 d = function.filtered_list(df, df_conf)
 
 print("unique molecules", d["molecule_chembl_id"].nunique())
@@ -172,15 +157,56 @@ print(d["parent_molecule_chembl_id"].nunique())
 # collapsed_lst = d.groupby("parent_molecule_chembl_id")["p_values"].agg(
 #     ["median", "std", "count"]
 # )
-collapsed_lst = d.groupby("parent_molecule_chembl_id")["canonical_smiles"].nunique()
+
+# collapsed_lst = d.groupby("parent_molecule_chembl_id")["canonical_smiles"].nunique()
+# print("-------------------------")
+# print(collapsed_lst.agg(["max", "min", "mean"]))
+# print((collapsed_lst > 1).sum())
+# print((collapsed_lst == 0).sum())
+# print((collapsed_lst >= 1).sum())
+# print("..........")
+# print(
+#     d[d["parent_molecule_chembl_id"].isin(collapsed_lst[collapsed_lst > 1].index)][
+#         ["parent_molecule_chembl_id", "canonical_smiles", "molecule_chembl_id"]
+#     ].to_string()
+# )
+
+# ----------------------------------------------------------------------------------------------------
+# need to erase this huas huas
+#
+# ----------------------------------------------------------------------------------------------------
 print("-------------------------")
-print(collapsed_lst.agg(["max", "min", "mean"]))
-print((collapsed_lst > 1).sum())
-print((collapsed_lst == 0).sum())
-print((collapsed_lst >= 1).sum())
-print("..........")
+
+repetitions = d.groupby("parent_molecule_chembl_id").size()
+print("Repeated parent molecule IDs")
+print("....")
+print((repetitions == 1).sum())
+print((repetitions == 2).sum())
+print((repetitions >= 3).sum())
+print("....")
+
+
+group_difference = d[
+    d["parent_molecule_chembl_id"].isin(repetitions[repetitions >= 2].index)
+].groupby("parent_molecule_chembl_id")
+
+min_max_p = group_difference["p_values"].agg([min, max])
+dif = min_max_p["max"] - min_max_p["min"]
+print(dif.describe())
+
+print(dif.idxmax())
+print("....")
+
 print(
-    d[d["parent_molecule_chembl_id"].isin(collapsed_lst[collapsed_lst > 1].index)][
-        ["parent_molecule_chembl_id", "canonical_smiles", "molecule_chembl_id"]
-    ].to_string()
+    d.loc[
+        d["parent_molecule_chembl_id"] == dif.idxmax(),
+        [
+            "parent_molecule_chembl_id",
+            "p_values",
+            "target_chembl_id",
+            "assay_chembl_id",
+            "standard_type",
+            "standard_relation",
+        ],
+    ]
 )
