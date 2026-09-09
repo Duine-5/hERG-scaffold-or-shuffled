@@ -57,7 +57,7 @@ InChIKeys = new_client.molecule.filter(molecule_chembl_id__in=d).only(
     "canonical_smiles",
     "standard_inchi_key",
 )
-if Path("data/CHEMBL240_InChIKeys.csv").exists():
+if Path("data/CHEMBL240_inchikey.csv").exists():
     print("InChIKeys skipped")
 else:
     df = pd.DataFrame(InChIKeys)[["molecule_chembl_id", "molecule_structures"]].dropna()
@@ -66,4 +66,6 @@ else:
 
     df.to_csv("data/CHEMBL240_inchikey.csv", index=False)
     print(len(InChIKeys), "InChIKeys")
-print(df.shape)
+
+# Test for diference in assay type = B and total entires in Chhembl
+# print(len(new_client.activity.filter(target_chembl_id="CHEMBL240", assay_type="B")))

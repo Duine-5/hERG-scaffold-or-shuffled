@@ -26,7 +26,8 @@ An alpha of 0.05, corresponding to a 95% will be utilised as the width of the pa
 A MAE paired interval between the random and scaffold split will determine the model's accuracy.
 
 # Filter
-- 32,640 bioactivity entries
+- 41,078 bioactivity entries
+- 32,640 binding assay entries
 - 16,198 entries which utilised IC50
 - 10,228 entries which found IC50 within the tested concentrations
 - 10,219 entries which report values in nM
