@@ -32,4 +32,12 @@ def filtered_list(df_activities, df_confidence):
         )
     ]
 
+    repetitions = d.groupby("parent_molecule_chembl_id").size()
+    group_difference = d[
+        d["parent_molecule_chembl_id"].isin(repetitions[repetitions >= 2].index)
+    ].groupby("parent_molecule_chembl_id")
+    min_max_p = group_difference["p_values"].agg([min, max])
+    dif = min_max_p["max"] - min_max_p["min"]
+    d = d[~d["parent_molecule_chembl_id"].isin(dif[dif > 1.36].index)]
+
     return d

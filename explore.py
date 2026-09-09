@@ -181,8 +181,7 @@ repetitions = d.groupby("parent_molecule_chembl_id").size()
 print("Repeated parent molecule IDs")
 print("....")
 print((repetitions == 1).sum())
-print((repetitions == 2).sum())
-print((repetitions >= 3).sum())
+print((repetitions >= 2).sum())
 print("....")
 
 
@@ -210,3 +209,5 @@ print(
         ],
     ]
 )
+print("....")
+print(len(d))

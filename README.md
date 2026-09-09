@@ -60,7 +60,11 @@ Standard deviation within same parent molecule (spread) was found to be 0.256, w
 A confidence filter with a threshold of >=8 was analysed, though no assay for this target scores below 8. After curation 19 assay ids were matched with a confidence level of 8, and 1,339 were matched with a confidence level of 9. No data would have been removed as a result of the filter as nothing scores below 8.
 
 ## Spread filter
-Dropped parent ids whose pChEMBL spread exceeds 1.36 log units to maintain n approximate of 2 standard deviations between 2 IC50 measurements as recommended by Kramer et al. (2012)
+Dropped parent ids whose pChEMBL spread (max - min) exceeds 1.36 log units (2 standard deviations) of the difference between two  IC50 measurements of the same compound and target (sigma = 0.68, Kalliokoski et al., 2013). 
+
+- 490 parent ids carried repeat measurements 
+- 79 parent ids exceeded the cutoff and were dropped
+- 411 parent ids with repeat measurements were retained
 
 # References
 Kalliokoski, T., Kramer, C., Vulpetti, A., & Gedeck, P. (2013). Comparability of mixed IC50 data – a statistical analysis. *PLoS ONE, 8*(4), e61007. https://doi.org/10.1371/journal.pone.0061007
