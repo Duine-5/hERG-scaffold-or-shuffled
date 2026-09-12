@@ -15,7 +15,7 @@ COLS = [
     "standard_relation",
     "standard_value",
     "standard_units",
-    #   "pchembl_value", # Not extracted until hypothesis
+    "pchembl_value",  # Not extracted until hypothesis was created
     "assay_chembl_id",
     "assay_type",
     "data_validity_comment",

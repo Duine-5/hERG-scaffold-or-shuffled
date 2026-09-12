@@ -4,18 +4,19 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 
 
-def lr_scaffold_split(Activities, Confidence, Descriptors, Runs):
-    d = function.filtered_list(Activities, Confidence)
+def lr_scaffold_split(data, Descriptors, Runs):
 
-    d["scaffolds"] = d["canonical_smiles"].apply(function.scaffold)
+    data = data.copy()
 
-    d = d.drop_duplicates(subset=["parent_molecule_chembl_id"])
-    d = d.dropna(subset=["scaffolds"])
+    data["scaffolds"] = data["canonical_smiles"].apply(function.scaffold)
 
-    total_count = len(d["parent_molecule_chembl_id"])
-    scaffolds = d["scaffolds"].unique().tolist()
+    data = data.drop_duplicates(subset=["parent_molecule_chembl_id"])
+    data = data.dropna(subset=["scaffolds"])
 
-    d_group = d.groupby("scaffolds")
+    total_count = len(data["parent_molecule_chembl_id"])
+    scaffolds = data["scaffolds"].unique().tolist()
+
+    d_group = data.groupby("scaffolds")
     d_dic = d_group["parent_molecule_chembl_id"].apply(list).to_dict()
 
     mae_list = []
@@ -41,7 +42,7 @@ def lr_scaffold_split(Activities, Confidence, Descriptors, Runs):
         # print(len(train_ids), "train molecules")
         # print(total_count, "total molecules")
 
-        test_ids = d[~d["parent_molecule_chembl_id"].isin(train_ids)][
+        test_ids = data[~data["parent_molecule_chembl_id"].isin(train_ids)][
             "parent_molecule_chembl_id"
         ].tolist()
 
@@ -74,17 +75,15 @@ def lr_scaffold_split(Activities, Confidence, Descriptors, Runs):
     return mae_list
 
 
-def lr_rando_split(Activities, Confidence, Descriptors, Runs):
-    d = function.filtered_list(Activities, Confidence)
+def lr_rando_split(data, Descriptors, Runs):
 
-    d["scaffolds"] = d["canonical_smiles"].apply(function.scaffold)
+    data = data.copy()
 
-    d = d.drop_duplicates(subset=["parent_molecule_chembl_id"])
-    d = d.dropna(subset=["scaffolds"])
+    data = data.drop_duplicates(subset=["parent_molecule_chembl_id"])
 
     mae_list = []
 
-    id_list = d["parent_molecule_chembl_id"].tolist()
+    id_list = data["parent_molecule_chembl_id"].tolist()
 
     for i in range(Runs):
         print("Run", i)

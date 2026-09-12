@@ -51,3 +51,13 @@ def scaffold(smi):
     if mol is None:  # Checks for non valid chemistry
         return None
     return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(mol))
+
+
+def noise_floor(data):
+    pchembl_iterations = data.groupby("parent_molecule_chembl_id")["p_values"].agg(
+        ["median", "std", "count"]
+    )
+    pchembl_iterations = pchembl_iterations[pchembl_iterations["std"].notna()]
+
+    noise_floor = pchembl_iterations["std"].median()
+    return noise_floor
