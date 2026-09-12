@@ -85,7 +85,10 @@ Parent molecules with repeated pChEMBL values will be evaluated as means for the
 # Results and Conclusion
 The scaffold split demonstrated a mean absolute error (MAE) of 0.624 +-0.040.
 The random split demonstrated a MAE of 0.623 +- 0.012
+
 ![Distribution of paired differences between scaffold and random splits](figures/paired_differences.png)
+
+
 The mean paired difference between these two groups was calculated as 0.0002 +- 0.043. Based on the proposed alpha of 0.05, the confidence interval of 50 runs (with standard seeds) was found to be 0.0124, compared to the noise floor of 0.202. Meaning that the difference in analysing hERG splits randomly or via scaffold grouping is not significant.
 
 # References
