@@ -74,10 +74,10 @@ plt.title("Distribution of Paired Differences")
 plt.axvline(
     x=confidence_interval[0], color="r", linestyle="--", label="Confidence Interval"
 )
-plt.axvline(x=confidence_interval[1], color="r", linestyle="--", label="_nolegend_")
+plt.axvline(x=confidence_interval[1], color="r", linestyle="--", label="_nolegend")
 
 plt.axvline(x=noise_floor, color="g", linestyle="-", label="Noise Floor")
-plt.axvline(x=-noise_floor, color="g", linestyle="-", label="_nolegend_")
+plt.axvline(x=-noise_floor, color="g", linestyle="-", label="_nolegend")
 
 plt.legend()
 plt.xlim(-0.25, 0.25)

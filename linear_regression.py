@@ -80,6 +80,7 @@ def lr_rando_split(data, Descriptors, Runs):
     data = data.copy()
 
     data = data.drop_duplicates(subset=["parent_molecule_chembl_id"])
+    data = data.dropna(subset=["canonical_smiles"])
 
     mae_list = []
 
