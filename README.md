@@ -80,7 +80,7 @@ Parent molecules with repeated pChEMBL values will be evaluated as means for the
 ### Limitations
 - Scaffold split training data may exceed 80%, as scaffold groups are assigned together. Random split training data is not able to exceed 80%.
 
-- Noise floor is a reflection of assay measurement precision, not a property of the split comparison, as utilised by Kalliokoski et al. (2013).
+- Noise floor is a reflection of assay measurement precision, not a property of the split comparison. Its external basis is the IC50 reproducibility estimate from  Kalliokoski et al. (2013).
 
 # Results and Conclusion
 The scaffold split demonstrated a mean absolute error (MAE) of 0.624 +-0.040.

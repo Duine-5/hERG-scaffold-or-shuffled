@@ -45,7 +45,7 @@ print(".--.-.-.-.--..-.-")
 avg = np.mean(paired_dif)
 print("Paired difference mean:", avg)
 SD = np.std(paired_dif, ddof=1)
-print("Paired difference standard deviation):", SD)
+print("Paired difference standard deviation:", SD)
 
 print(".--.-.-.-.--..-.-")
 SE = SD / math.sqrt(runs)
