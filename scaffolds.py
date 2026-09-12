@@ -14,6 +14,8 @@ d = function.filtered_list(df, df_conf)
 smi = d["canonical_smiles"].iloc[0]
 # -----------------------------------------------
 # Initial test
+# -----------------------------------------------
+
 # print(smi)
 
 mol = Chem.MolFromSmiles(smi)
@@ -22,20 +24,12 @@ scaf = MurckoScaffold.GetScaffoldForMol(mol)
 Draw.MolToFile(mol, "data/mol.png", size=(400, 400))
 
 # -----------------------------------------------
-# Actual function
+# Scaffold generation
+# -----------------------------------------------
+
 d = d.drop_duplicates(subset=["parent_molecule_chembl_id"])
 
-
-def scaffold(smi):
-    if not isinstance(smi, str):  # check for non strings
-        return None
-    mol = Chem.MolFromSmiles(smi)
-    if mol is None:  # Checks for non valid chemistry
-        return None
-    return Chem.MolToSmiles(MurckoScaffold.GetScaffoldForMol(mol))
-
-
-d["scaffold"] = d["canonical_smiles"].apply(scaffold)
+d["scaffold"] = d["canonical_smiles"].apply(function.scaffold)
 
 # print(
 #     d[d["scaffold"].isna()][
